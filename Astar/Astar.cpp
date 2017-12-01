@@ -8,6 +8,9 @@
 
 using namespace std;
 
+const int xEnd = 19, yEnd = 19;
+int warningstate = 0, G = 0, k = 0;
+
 class Node
 {
 public:
@@ -19,9 +22,6 @@ public:
 		return F;
 	}
 };
-
-const int xEnd = 19, yEnd = 19;
-int warningstate = 0, G = 0, k = 0;
 
 void algorithm(int tda[20][20], int xCurrent, int yCurrent);
 int calculateG(vector<Node> parents, int xCurrent, int yCurrent);
