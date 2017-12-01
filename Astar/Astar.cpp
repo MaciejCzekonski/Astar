@@ -5,11 +5,12 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <Windows.h>
 
 using namespace std;
 
 const int xEnd = 19, yEnd = 19;
-int warningstate = 0, G = 0, k = 0;
+int warningstate = 0, G = 0;
 
 class Node
 {
@@ -34,12 +35,19 @@ int main(void) {
 	for (int i = 0; i < 20; i++)
 		for (int j = 0; j < 20; j++)
 			file >> grid[i][j];
+	
 	algorithm(grid, xstart, ystart);
 	grid[0][0] = 3;
+
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	int Colors[6] = { 8,0,0,6,0,4 };
+
 	if(warningstate != 1)
 	for (int i = 0; i < 20; i++) {
-		for (int j = 0; j < 20; j++)
+		for (int j = 0; j < 20; j++) {
+			SetConsoleTextAttribute(hConsole, Colors[grid[i][j]]);
 			cout << grid[i][j];
+		}
 		cout << endl;
 	}
 }
@@ -64,10 +72,7 @@ void algorithm(int tda[20][20], int xCurrent, int yCurrent) {
 			if (itRightO != open.end()) {
 				nodeRight.F = nodeRight.calculateF(calculateG(closed, xCurrent, yCurrent));
 				auto index = distance(open.begin(), itRightO);
-				if (nodeRight.F < open[index].F) {
-					open.erase(open.begin() + index);
-					open.push_back(nodeRight);
-				}
+				(nodeRight.F < open[index].F) ? open.erase(open.begin() + index), open.push_back(nodeRight) : "";
 			}
 			else {
 				nodeRight.F = nodeRight.calculateF(calculateG(closed, xCurrent, yCurrent));
@@ -82,10 +87,7 @@ void algorithm(int tda[20][20], int xCurrent, int yCurrent) {
 			if (itDownO != open.end()) {
 				nodeDown.F = nodeDown.calculateF(calculateG(closed, xCurrent, yCurrent));
 				auto index = distance(open.begin(), itDownO);
-				if (nodeDown.F < open[index].F) {
-					open.erase(open.begin() + index);
-					open.push_back(nodeDown);
-				}
+				(nodeDown.F < open[index].F) ? open.erase(open.begin() + index), open.push_back(nodeDown) : "";
 			}
 			else {
 				nodeDown.F = nodeDown.calculateF(calculateG(closed, xCurrent, yCurrent));
@@ -100,10 +102,7 @@ void algorithm(int tda[20][20], int xCurrent, int yCurrent) {
 			if (itLeftO != open.end()) {
 				nodeLeft.F = nodeLeft.calculateF(calculateG(closed, xCurrent, yCurrent));
 				auto index = distance(open.begin(), itLeftO);
-				if (nodeLeft.F < open[index].F) {
-					open.erase(open.begin() + index);
-					open.push_back(nodeLeft);
-				}
+				(nodeLeft.F < open[index].F) ? open.erase(open.begin() + index), open.push_back(nodeLeft) : "";
 			}
 			else {
 				nodeLeft.F = nodeLeft.calculateF(calculateG(closed, xCurrent, yCurrent));
@@ -118,10 +117,7 @@ void algorithm(int tda[20][20], int xCurrent, int yCurrent) {
 			if (itUpO != open.end()) {
 				nodeUp.F = nodeUp.calculateF(calculateG(closed, xCurrent, yCurrent));
 				auto index = distance(open.begin(), itUpO);
-				if (nodeUp.F < open[index].F) {
-					open.erase(open.begin() + index);
-					open.push_back(nodeUp);
-				}
+				(nodeUp.F < open[index].F) ? open.erase(open.begin() + index), open.push_back(nodeUp) : "";
 			}
 			else {
 				nodeUp.F = nodeUp.calculateF(calculateG(closed, xCurrent, yCurrent));
@@ -130,12 +126,9 @@ void algorithm(int tda[20][20], int xCurrent, int yCurrent) {
 			G = 0;
 		}
 		for (int j = 0; j < open.size(); j++)
-			if (smallest >= open[j].F) {
-				smallest = open[j].F;
-				posInVector = j;
-			}
+			(smallest >= open[j].F) ? smallest = open[j].F, posInVector = j : 0;
 
-		if (open.empty() && (xCurrent != xEnd || yCurrent != yEnd)) {
+		if(open.empty() && (xCurrent != xEnd || yCurrent != yEnd)) {
 			warningstate = 1;
 			cout << "There is no path available";
 			break;
@@ -146,8 +139,7 @@ void algorithm(int tda[20][20], int xCurrent, int yCurrent) {
 		yCurrent = open[posInVector].y;
 		open.erase(open.begin()+posInVector);
 		
-		if (xCurrent == 19, yCurrent == 19)
-			createPath(tda, closed, xEnd, yEnd);
+		(xCurrent == 19, yCurrent == 19) ? createPath(tda, closed, xEnd, yEnd) : "";
 		
 	}
 }
@@ -176,5 +168,3 @@ void createPath(int grid[20][20], vector<Node> parents, int x, int y) {
 		}
 	}
 }
-
-
