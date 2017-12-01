@@ -1,0 +1,4 @@
+﻿  Astar.cpp
+e:\c+\astar\astar\astar.cpp(139): warning C4018: '<': signed/unsigned mismatch
+  Astar.vcxproj -> E:\C+\Astar\Debug\Astar.exe
+  Astar.vcxproj -> E:\C+\Astar\Debug\Astar.pdb (Full PDB)
