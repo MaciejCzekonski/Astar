@@ -16,11 +16,15 @@ class Node
 {
 public:
 	int x, y, xP, yP;
-	double F;
-	Node(int X, int Y, int xp, int yp) : x(X), y(Y), xP(xp), yP(yp) {}
+	double F, H;
+	Node(int X, int Y, int xp, int yp) : x(X), y(Y), xP(xp), yP(yp) { calculateH(); }
 	double calculateF(int G) {
-		F = sqrt((x - xEnd)*(x - xEnd) + (y - yEnd)*(y - yEnd)) + G;
+		F = H + G;
 		return F;
+	}
+	double calculateH() {
+		H = sqrt((x - xEnd)*(x - xEnd) + (y - yEnd)*(y - yEnd));
+		return H;
 	}
 };
 
@@ -125,8 +129,18 @@ void algorithm(int tda[20][20], int xCurrent, int yCurrent) {
 			}
 			G = 0;
 		}
+		
 		for (int j = 0; j < open.size(); j++)
-			(smallest >= open[j].F) ? smallest = open[j].F, posInVector = j : 0;
+			if (smallest >= open[j].F) {
+				if (smallest == open[j].F) {
+					if (open[j].H < open[posInVector].H)
+						posInVector = j;
+				}
+				else {
+					smallest = open[j].F;
+					posInVector = j;
+				}
+			}
 
 		if(open.empty() && (xCurrent != xEnd || yCurrent != yEnd)) {
 			warningstate = 1;
